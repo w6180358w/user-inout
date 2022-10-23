@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.search.search.dao.UserDao">
+	<resultMap id="User" type="com.search.search.entity.User">
+		<id property="id" column="ID_" jdbcType="VARCHAR" />
+		<result property="name" column="NAME_" jdbcType="VARCHAR" />
+		<result property="inout" column="INOUT_" jdbcType="VARCHAR" />
+		<result property="area" column="AREA_" jdbcType="VARCHAR" />
+		<result property="sex" column="SEX_" jdbcType="VARCHAR" />
+		<result property="birth" column="BIRTH_" jdbcType="VARCHAR" />
+		<result property="numType" column="NUM_TYPE_" jdbcType="VARCHAR" />
+		<result property="num" column="NUM_" jdbcType="VARCHAR" />
+		<result property="time" column="TIME_" jdbcType="VARCHAR" />
+		<result property="inoutArea" column="INOUTAREA_" jdbcType="VARCHAR" />
+		<result property="traffic" column="TRAFFIC_" jdbcType="VARCHAR" />
+		<result property="target" column="TARGET_" jdbcType="VARCHAR" />
+		<result property="importTime" column="IMPORTTIME_" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryLimit" resultMap="User">
+		select * from user 
+		where 1=1 
+		<if test="inout != null and inout != ''"> 
+			<bind name="inoutp" value="'%' + inout +'%'" />
+			and INOUT_ like #{inoutp,jdbcType=VARCHAR} 
+		</if>
+		<if test="inoutArea != null and inoutArea != ''"> 
+			<bind name="inoutAreap" value="'%' + inoutArea +'%'" />
+			and INOUTAREA_ like #{inoutAreap,jdbcType=VARCHAR} 
+		</if>
+		<if test="target != null and target != ''"> 
+			<bind name="targetp" value="'%' + target +'%'" />
+			and TARGET_ like #{targetp,jdbcType=VARCHAR} 
+		</if>
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+		and TIME_ <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR} and TIME_ <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR} 
+		</if>
+		limit #{currentPage,jdbcType=VARCHAR},#{pageSize,jdbcType=VARCHAR};
+	</select>
+
+	<select id="queryCount" resultType="java.lang.Long">
+		select count(ID_) from user 
+		where 1=1 
+		<if test="inout != null and inout != ''"> 
+			<bind name="inoutp" value="'%' + inout +'%'" />
+			and INOUT_ like #{inoutp,jdbcType=VARCHAR} 
+		</if>
+		<if test="inoutArea != null and inoutArea != ''"> 
+			<bind name="inoutAreap" value="'%' + inoutArea +'%'" />
+			and INOUTAREA_ like #{inoutAreap,jdbcType=VARCHAR} 
+		</if>
+		<if test="target != null and target != ''"> 
+			<bind name="targetp" value="'%' + target +'%'" />
+			and TARGET_ like #{targetp,jdbcType=VARCHAR} 
+		</if>
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+		and TIME_ <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR} and TIME_ <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR} 
+		</if>
+	</select>
+
+	<insert id="addUser" parameterType="com.search.search.entity.User">
+		insert into USER (ID_, NAME_, INOUT_,AREA_,SEX_,BIRTH_,NUM_TYPE_,NUM_,TIME_,INOUTAREA_,TRAFFIC_,
+		TARGET_,IMPORTTIME_)
+		values
+		<foreach collection="list" item="dept" index="index"
+			separator=",">
+			(#{dept.id,jdbcType=VARCHAR}, 
+			#{dept.name,jdbcType=VARCHAR}, 
+			#{dept.inout,jdbcType=VARCHAR},
+			#{dept.area,jdbcType=VARCHAR},
+			#{dept.sex,jdbcType=VARCHAR},
+			#{dept.birth,jdbcType=VARCHAR},
+			#{dept.numType,jdbcType=VARCHAR},
+			#{dept.num,jdbcType=VARCHAR},
+			#{dept.time,jdbcType=VARCHAR},
+			#{dept.inoutArea,jdbcType=VARCHAR},
+			#{dept.traffic,jdbcType=VARCHAR},
+			#{dept.target,jdbcType=VARCHAR},
+			#{dept.importTime,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<delete id="deleteUser" parameterType="java.lang.String">
+		delete from user where ID_=#{userId};
+	</delete>
+</mapper>
