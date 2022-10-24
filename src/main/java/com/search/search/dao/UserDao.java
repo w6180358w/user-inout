@@ -14,6 +14,8 @@ public interface UserDao {
 	
 	List<User> queryLimit(Map<String,Object> params);
 	
+	List<User> query(Map<String,Object> params);
+	
 	Long queryCount(Map<String,Object> params);
 	 
     Integer addUser(List<User> user);

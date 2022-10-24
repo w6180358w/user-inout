@@ -39,12 +39,21 @@
 			<div class="col-xs-3">出入口岸:</div>
 			<div class="col-xs-9"><input type="text" id="inoutArea" style="width:100%"></div>
 		</div>
+		<div class="col-xs-3">
+			<div class="col-xs-5">对比时间间隔:</div>
+			<div class="col-xs-7"><select style="width:100%;height:26px;" id="dur">
+					<option value="5">5分钟</option>
+					<option value="10">10分钟</option>
+					<option value="15">15分钟</option>
+					<option value="20">20分钟</option>
+				</select></div>
+		</div>
 	</div>
 	<div class="row" style="margin-top:8px;">
 		<div class="col-xs-4">
 			<div class="col-xs-3">出入境:</div>
 			<div class="col-xs-9">
-				<select style="width:100%" id="inout" onchange="search()">
+				<select style="width:100%;height:26px;" id="inout" onchange="search()">
 					<option value="">全部</option>
 					<option value="出境">出境</option>
 					<option value="入境">入境</option>
@@ -58,7 +67,7 @@
 		<div class="col-xs-3">
 			<input type="file" id="file" accept="xls,xlsx" style="margin-right:5px;" onchange="fileChange(this)"/>
 			<button type="button" style="margin-right:5px;" onclick="fileClick()">导入</button>
-			<button type="button" style="margin-right:5px;">导出</button>
+			<button type="button" style="margin-right:5px;" onclick="exporte()">导出</button>
 			<button type="button" style="margin-right:5px;" onclick="cleard()">清空</button>
 			<button type="button" onclick="search()">搜索</button>
 		</div>
@@ -125,6 +134,7 @@ $(document).ready( function () {
                 d.inout = $("#inout").val();
                 d.startTime = $("#startTime").val();
                 d.endTime = $("#endTime").val();
+                d.dur = $("#dur").val();
          	}
          },
          "drawCallback": function( settings ) {
@@ -188,6 +198,32 @@ function cleard(){
     $("#startTime").val("");
     $("#endTime").val("");
 	search();
+}
+function exporte(){
+	$.ajax({
+		url: '/export',
+		type: 'POST',
+		data: {
+			name : $("#name").val(),
+            inoutArea : $("#inoutArea").val(),
+            target : $("#target").val(),
+            inout : $("#inout").val(),
+            startTime : $("#startTime").val(),
+            endTime : $("#endTime").val(),
+            dur : $("#dur").val()
+		},
+		contentType: "application/json",
+		success:function(){
+			search();
+		},
+		failure:function(){
+			alert("上传失败!");
+		},
+		error:function(){
+			alert("上传失败!");
+			$("#file").val(null);
+		}
+	});
 }
 </script>
 </body>

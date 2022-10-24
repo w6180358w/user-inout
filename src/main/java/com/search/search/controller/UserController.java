@@ -49,7 +49,13 @@ public class UserController {
 	
 	@RequestMapping("import")
 	@ResponseBody
-	public void add(HttpServletRequest request,MultipartFile file) throws IOException{
+	public void upload(HttpServletRequest request,MultipartFile file) throws IOException{
+		EasyExcel.read(file.getInputStream(), User.class, new UserReadListener(userService)).sheet().doRead();
+	}
+	
+	@RequestMapping("export")
+	@ResponseBody
+	public void download(HttpServletRequest request,MultipartFile file) throws IOException{
 		EasyExcel.read(file.getInputStream(), User.class, new UserReadListener(userService)).sheet().doRead();
 	}
 
